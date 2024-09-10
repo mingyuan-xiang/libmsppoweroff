@@ -6,8 +6,18 @@
 #include <libmspio/uartio.h>
 #include <libmspprintf/mspprintf.h>
 
+#define MAGIC_NUMBER 42
+
+__ro_hinv uint32_t magic_num;
+
 static uint16_t old_csctl2 = 0;
-void intermittent_init() { lfxt_start(old_csctl2); }
+
+void intermittent_init() {
+  lfxt_start(old_csctl2);
+  if (magic_num != MAGIC_NUMBER) {
+    magic_num = MAGIC_NUMBER;
+  }
+}
 void intermittent_stop() { lfxt_stop(old_csctl2); }
 
 static uint32_t poweroff_tick;
@@ -73,7 +83,7 @@ void
   if (intermittent_tick >= poweroff_tick && TA0CCR2 >= poweroff_timer_cnt) {
     PMMCTL0 = PMMPW | PMMSWPOR;
   }
-    break; // CCR2 not used
+    break;
   case TAIV__TACCR3:
     break; // reserved
   case TAIV__TACCR4:
