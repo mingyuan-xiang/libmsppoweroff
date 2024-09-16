@@ -5,10 +5,13 @@
 #include <libmsp/mspbase.h>
 #include <libmspio/uartio.h>
 #include <libmspprintf/mspprintf.h>
+#include <libmsppoweroff/poweroff.h>
 
 #define MAGIC_NUMBER 42
 
-__ro_hinv uint32_t magic_num;
+__ro_hinv uint16_t magic_num;
+
+__ro_hinv uint16_t intermittent_status[INTERMITTENT_STATUS_SIZE];
 
 static uint16_t old_csctl2 = 0;
 
@@ -16,6 +19,7 @@ void intermittent_init() {
   lfxt_start(old_csctl2);
   if (magic_num != MAGIC_NUMBER) {
     magic_num = MAGIC_NUMBER;
+    memset(intermittent_status, 0, INTERMITTENT_STATUS_SIZE * sizeof(uint16_t)); 
   }
 }
 void intermittent_stop() { lfxt_stop(old_csctl2); }
