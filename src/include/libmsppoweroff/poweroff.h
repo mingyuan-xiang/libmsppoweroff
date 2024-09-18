@@ -16,13 +16,8 @@ extern __ro_hinv uint16_t intermittent_status[INTERMITTENT_STATUS_SIZE];
 void intermittent_init();
 void intermittent_stop();
 
-/* set intermittent timer in microsecond */
-void start_intermittent_tests_us(uint32_t us);
-
-/* set intermittent timer in millisecond */
-void start_intermittent_tests_ms(uint32_t ms);
-
-void restart();
+/* set intermittent timer in (second and ACLK cycles (32768 Hz)) */
+void start_intermittent_tests(uint32_t sec, uint16_t cycles);
 
 void stop_intermittent_tests();
 

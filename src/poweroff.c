@@ -30,17 +30,17 @@ static uint16_t poweroff_timer_cnt;
 static unsigned int intermittent_int_state;
 static uint32_t intermittent_tick;
 
-#define CNT_MAX 65535
+#define CNT_MAX 65536
 #define US_PER_CYCLE 15 // (1000000 / CNT_MAX)
 
-void set_timer_threshold(uint32_t us) {
-  poweroff_tick = us / 1000000;
-  poweroff_timer_cnt = (us % 1000000) / US_PER_CYCLE;
+static void set_timer_threshold(uint32_t sec, uint16_t cycles) {
+  poweroff_tick = sec;
+  poweroff_timer_cnt = cycles;
 }
 
-void start_intermittent_tests(uint32_t us) {
+void start_intermittent_tests(uint32_t sec, uint16_t cycles) {
   intermittent_tick = 0;
-  set_timer_threshold(us);
+  set_timer_threshold(sec, cycles);
 
   TA0CCTL2 = CM_1 | CCIS_1 | SCS | CAP | CCIE;
 
@@ -53,14 +53,6 @@ void start_intermittent_tests(uint32_t us) {
   timer_start_cont(CONFIG_INTERMITTENT_TIMER);
 }
 
-void start_intermittent_tests_us(uint32_t us) {
-  start_intermittent_tests(us);
-}
-
-void start_intermittent_tests_ms(uint32_t ms) {
-  start_intermittent_tests(ms * 1000);
-}
-
 void stop_intermittent_tests() {
   // disable the timer
   timer_halt(CONFIG_INTERMITTENT_TIMER);
@@ -69,10 +61,6 @@ void stop_intermittent_tests() {
   timer_halt(CONFIG_INTERMITTENT_TIMER);
   timer_reset(CONFIG_INTERMITTENT_TIMER);
   timer_IFG_disable(CONFIG_INTERMITTENT_TIMER);
-}
-
-void restart() {
-  start_intermittent_tests(1);
 }
 
 void
