@@ -9,9 +9,9 @@
 
 #define MAGIC_NUMBER 42
 
-__ro_hinv uint16_t magic_num;
+__ro_nv uint16_t magic_num;
 
-__ro_hinv uint16_t intermittent_status[INTERMITTENT_STATUS_SIZE];
+__ro_nv uint16_t intermittent_status[INTERMITTENT_STATUS_SIZE];
 
 static uint16_t old_csctl2 = 0;
 

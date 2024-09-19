@@ -11,7 +11,7 @@
 
 #define INTERMITTENT_STATUS_SIZE 8
 
-extern __ro_hinv uint16_t intermittent_status[INTERMITTENT_STATUS_SIZE];
+extern __ro_nv uint16_t intermittent_status[];
 
 void intermittent_init();
 void intermittent_stop();
