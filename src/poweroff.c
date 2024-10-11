@@ -31,13 +31,13 @@ void start_intermittent_tests(uint16_t cycles) {
   set_timer_threshold(cycles);
 
   // setup the timer on up mode & run
-  timer_setup_up(CONFIG_INTERMITTENT_TIMER, ACLK, 1, 1, cycles);
+  timer_setup_up(CONFIG_INTERMITTENT_TIMER, SMCLK, 8, 4, cycles);
 
   intermittent_int_state = __get_interrupt_state();
   __enable_interrupt();
 
   // start the timer on up mode & run
-  timer_start_cont(CONFIG_INTERMITTENT_TIMER);
+  timer_start_up(CONFIG_INTERMITTENT_TIMER);
 }
 
 void stop_intermittent_tests() {
@@ -50,7 +50,7 @@ void stop_intermittent_tests() {
   timer_IFG_disable(CONFIG_INTERMITTENT_TIMER);
 }
 
-void __attribute__((interrupt(STIC3(TIMER, CONFIG_SLEEP_TIMER, _A0_VECTOR))))
-  STIC3(TIMER, CONFIG_SLEEP_TIMER, _A0_ISR)(void) {
+void __attribute__((interrupt(STIC3(TIMER, CONFIG_INTERMITTENT_TIMER, _A0_VECTOR))))
+  STIC3(TIMER, CONFIG_INTERMITTENT_TIMER, _A0_ISR)(void) {
   PMMCTL0 = PMMPW | PMMSWPOR;
 }
